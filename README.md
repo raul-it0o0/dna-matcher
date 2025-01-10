@@ -86,3 +86,8 @@ Additionally, a build system, such as [Ninja](https://ninja-build.org/) or [GNU 
 - A GUI, that allows users to input the files required and that will make the application  way more intuitive
 - Using specialized file formats to store the DNA sequences, such as the [FASTA file format](https://en.wikipedia.org/wiki/FASTA_format).
 - Storing DNA sequences in an embedded database, for faster retrieval and to not require the user to manually input the files each time.
+
+## Known issues
+- If compiled on a Windows machine, the executables cannot be ran in UNIX-based terminals (e.g. Git Bash). 
+  The executables must be ran in the Windows Command Prompt or PowerShell. 
+  - The application **should** work on a Linux-based machine. It has been tested on WSL (Windows Subsystem for Linux) and it works as expected.
