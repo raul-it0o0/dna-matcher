@@ -1,5 +1,5 @@
 #include <random>
-#include "utils.hpp"
+#include "dna_matcher.hpp"
 #define MAX_ATTEMPTS 100
 
 std::vector<std::string> getNSubstrings(const std::string& string, int count) {
@@ -59,4 +59,59 @@ std::vector<std::string> getNSubstrings(const std::string& string, int count) {
     }
 
     return substrings;
+}
+
+int pattern_matches(const std::string &text, const std::set<std::string> &patterns) {
+    // Create the trie tree using the given set of patterns
+    TrieTree trie = TrieTree{patterns};
+
+    // Keep track of the found matches
+    std::set<std::string> foundStrings;
+    int matches = 0;
+
+    // Set the initial state of the automaton to be the root of the tree
+    Node* state = trie.getRoot();
+
+    int i = 0;
+
+    // Iterate over text
+    while (i < text.length()) {
+        char c = text[i];
+
+        // If there is a transition with the character c
+        if (state->hasChild(c)) {
+            // Transition to this next state
+            state = state->getChild(c);
+
+            // If the current state has any outputs (i.e. is the end of a pattern),
+            if (!state->getOutputs().empty()) {
+                for (const auto& output : state->getOutputs()) {
+                    // Add the found string into the set if it hasn't been found previously
+                    if (foundStrings.find(output) == foundStrings.end()) {
+                        foundStrings.insert(output);
+                        matches++;
+                    }
+                }
+            }
+            // Move on to the next character of the text
+            i++;
+        }
+
+        // There is no transition with the character c
+
+        // If the current state is the root,
+        else if (state == trie.getRoot()) {
+            // Move on to the next character of the text
+            i++;
+        }
+        else {
+            // Follow the failure links, until eventually
+            // reaching the root
+            // or reaching a state with a transition with the character c
+            state = state->getFailureLink();
+        }
+    }
+
+    return matches;
+
 }
